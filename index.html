@@ -226,7 +226,9 @@ ol.steps li::before{content:counter(s); position:absolute; left:0; top:1px;
   background:var(--accent); color:var(--accent-text); display:flex;
   align-items:center; justify-content:center; font-size:13px; line-height:1;}
 .seg .nm{flex:1; min-width:0;}
-.seg .q{color:var(--muted); font-size:13px; margin-left:7px; white-space:nowrap;}
+/* NOT .q — that class marks an exercise question, and reusing it here made
+   markUnit count the clip label as a fourth question ("3 / 4"). */
+.seg .seg-q{color:var(--muted); font-size:13px; margin-left:7px; white-space:nowrap;}
 .seg .du{flex:0 0 auto; font-size:13px; color:var(--muted);
   font-variant-numeric:tabular-nums;}
 /* progress hairline pinned to the bottom edge of the row */
@@ -238,8 +240,106 @@ ol.steps li::before{content:counter(s); position:absolute; left:0; top:1px;
 .audio-note{font-size:13px; color:var(--muted); margin-top:11px;
   padding-top:10px; border-top:1px solid var(--line);}
 @media (max-width:600px){
-  .seg .q{display:block; margin-left:0;}
+  .seg .seg-q{display:block; margin-left:0;}
 }
+
+/* ---------- exercises ----------
+   The working part of the page: real questions, real passages, marked against
+   the real key. Correct/incorrect are cyan/red with mandatory glyphs, never
+   green/red — the electric palette has no green, and red/green measures
+   deltaE 4.1 under deuteranopia. */
+.ex{margin-top:22px;}
+.ex-day{display:flex; align-items:center; gap:10px; margin:22px 0 10px;
+  font-size:12.5px; font-weight:500; color:var(--accent-ink);}
+.ex-day::after{content:""; flex:1; height:1px; background:rgba(var(--accent-rgb),0.28);}
+.unit{border:1px solid var(--line); border-radius:var(--radius-card);
+  padding:16px 17px; margin-bottom:12px; background:rgba(0,0,0,0.22);}
+:root[data-theme="light"] .unit{background:rgba(255,255,255,0.62);}
+.unit-head{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px;}
+.unit-ttl{font-size:15px; font-weight:500;}
+.unit-sub{font-size:12.5px; color:var(--muted);}
+.unit-score{margin-left:auto; font-size:13px; font-weight:500; color:var(--accent-ink);
+  font-variant-numeric:tabular-nums;}
+
+/* reading passage */
+.psg{border:1px solid var(--line); border-radius:var(--radius-control);
+  padding:16px 18px; margin-bottom:14px; font-size:14.5px; line-height:1.65;
+  max-height:420px; overflow-y:auto; background:var(--card);}
+.psg p{margin:0 0 11px;} .psg p:last-child{margin-bottom:0;}
+.psg .doc-title,.psg .memohead{font-weight:500; margin-bottom:10px;}
+.psg .memohead{font-size:13.5px; color:var(--muted); padding-bottom:9px;
+  border-bottom:1px solid var(--line);}
+.psg .blank{display:inline-flex; align-items:center; justify-content:center;
+  min-width:34px; padding:1px 7px; border-radius:var(--radius-badge);
+  background:var(--accent); color:var(--accent-text); font-weight:500; font-size:13px;}
+.psg-more{font-size:12.5px; color:var(--muted); margin:-8px 0 14px;}
+
+/* questions */
+.q{padding:12px 0; border-top:1px solid var(--line);}
+.q:first-child{border-top:0; padding-top:2px;}
+.q-stem{font-size:14.5px; margin-bottom:9px;}
+.q-stem b{color:var(--accent-ink); margin-right:6px;}
+.opt{display:flex; align-items:flex-start; gap:10px; padding:8px 11px; margin-bottom:5px;
+  border:1px solid var(--line); border-radius:var(--radius-control);
+  font-size:14px; cursor:pointer; min-height:42px;}
+.opt:last-child{margin-bottom:0;}
+.opt:hover{border-color:var(--line-strong);}
+.opt input{margin:3px 0 0; accent-color:var(--accent); flex:0 0 auto;}
+.opt .ol{flex:0 0 auto; font-weight:500; color:var(--muted); width:15px;}
+.opt.picked{border-color:rgba(var(--accent-rgb),0.55); background:rgba(var(--accent-rgb),0.10);}
+/* after marking */
+.marked .opt{cursor:default;}
+/* The marked state sits on top of an accent-tinted card, so a 16% tint washed
+   out. These are stronger, with the ink colour carried by the letter and the
+   glyph too — cyan/red, never green/red, and the glyph is a required second
+   channel, not decoration. */
+.opt.ok{background:rgba(var(--rgb-cyan),0.26); border-color:rgba(var(--rgb-cyan),0.65);
+  color:var(--ok-ink);}
+.opt.no{background:rgba(var(--rgb-error),0.26); border-color:rgba(var(--rgb-error),0.65);
+  color:var(--no-ink);}
+:root[data-theme="light"] .opt.ok{background:rgba(var(--rgb-cyan),0.30);}
+:root[data-theme="light"] .opt.no{background:rgba(var(--rgb-error),0.26);}
+.opt.ok .ol,.opt.no .ol{color:inherit;}
+.opt .mk{margin-left:auto; font-weight:500; font-variant-emoji:text; color:inherit;
+  font-size:16px;}
+.why{margin-top:9px; padding:11px 13px; border-radius:var(--radius-control);
+  background:rgba(var(--accent-rgb),0.10); font-size:13.5px; color:var(--muted);}
+.why b{color:var(--text);}
+.why ul{list-style:none; margin-top:6px;}
+.why li{padding-left:16px; position:relative; margin-bottom:3px;}
+.why li::before{content:""; position:absolute; left:0; top:9px; width:5px; height:5px;
+  border-radius:50%; background:var(--accent-ink);}
+
+/* free-text capture (notes, gist, dictation) */
+.field{margin-bottom:10px;}
+.field label{display:block; font-size:13px; color:var(--muted); margin-bottom:5px;}
+.field input,.field textarea{width:100%; font-family:inherit; font-size:14.5px;
+  color:var(--text); background:var(--card); border:1px solid var(--line);
+  border-radius:var(--radius-control); padding:10px 12px; min-height:44px;}
+.field textarea{min-height:110px; line-height:1.6; resize:vertical;}
+.field input:focus,.field textarea:focus{outline:2px solid var(--accent-ink);
+  outline-offset:1px; border-color:transparent;}
+
+.ex-actions{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:14px;}
+.ex-btn{font-family:inherit; font-size:14px; font-weight:500; padding:10px 18px;
+  min-height:44px; border-radius:var(--radius-control); cursor:pointer;
+  background:var(--accent); color:var(--accent-text); border:1px solid transparent;}
+.ex-btn.ghost{background:transparent; color:var(--text); border-color:var(--line-strong);
+  font-weight:400;}
+.ex-btn:focus-visible{outline:2px solid var(--accent-ink); outline-offset:2px;}
+.ex-msg{font-size:13.5px; color:var(--muted);}
+
+/* timer */
+.timer{display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  padding:12px 14px; margin-bottom:14px; border-radius:var(--radius-control);
+  border:1px dashed rgba(var(--accent-rgb),0.40);}
+:root[data-theme="light"] .timer{border-color:rgba(var(--accent-text-rgb),0.34);}
+.timer .tv{font-size:26px; font-weight:500; font-variant-numeric:tabular-nums;
+  color:var(--accent-ink); min-width:92px;}
+.timer.over .tv{color:var(--no-ink);}
+.timer .tl{font-size:13px; color:var(--muted); flex:1; min-width:120px;}
+.splits{font-size:13px; color:var(--muted); width:100%;
+  font-variant-numeric:tabular-nums;}
 
 /* ---------- why-this-one callout ---------- */
 .finding{background:rgba(var(--accent-rgb),0.12);
@@ -331,7 +431,7 @@ ul.wins li::before{content:""; position:absolute; left:0; top:9px; width:7px;
    Generated from _build/template.html by _build/build.mjs. Do not edit this
    file directly; edit the template or the student's JSON and rebuild.
    ============================================================================ */
-const HW = {"slug":"jeen","nick":"Jeen","class":"3","weekOf":"2026-08-10","weekLabel":"10 August 2026","dailyLoad":"About 30 minutes a day","focus":["Grammar words","Double passages","Listening gist"],"tiles":[{"lbl":"This week","val":"3","sub":"assignments, five days"},{"lbl":"Your estimate now","val":"425<small>–565</small>","sub":"listening 65 · reading 48"},{"lbl":"Your clearest gap","val":"37<small>pts</small>","sub":"grammar words vs vocabulary"}],"why":{"lede":"You have the strongest listening in the group, and something in your results that nobody else managed: you never lost a whole recording. Every single conversation and talk gave you at least one mark. What your test shows is not general weakness — it is two very specific things and one unusual habit. Specific is good. Specific is fixable.","points":[{"label":"Part 5: grammar words vs vocabulary","value":"23% vs 60%","note":"Your vocabulary is a genuine strength. Prepositions, conjunctions and pronouns are not — yet. This is the clearest single gap anyone in the group has."},{"label":"Part 7: one document vs two","value":"68% vs 30%","note":"Single passages are working well. The moment a question spans two documents, it falls away."},{"label":"Reading time used","value":"81 of 75 min","note":"Six minutes over — and the double passages are the last twenty questions on the paper. That may be part of the story above, and we should find out."},{"label":"Where your listening marks fall","value":"50% first, 80% last","note":"The reverse of most students. You catch the detail and miss the frame. Genuinely unusual, and worth a week of attention."}]},"assignments":[{"title":"Grammar words only, fifteen a day","short":"Grammar words","tag":"Reading","dose":"15 items a day","time":"~15 min","days":["Mon","Tue","Wed","Thu","Fri"],"intro":"Not mixed sets this week. Prepositions, conjunctions and relative pronouns, and nothing else.","steps":["<b>Fifteen Part 5 items</b> — only the ones where the four options are grammar words: <i>among / whether / who / despite</i> and friends. Skip the vocabulary and word-form ones.","<b>Answer them.</b>","<b>For each question, write why each of the three wrong options is wrong.</b> All three. This is the actual exercise — the answering part is just setup.","<b>Keep one running list</b> all week of the prepositions that catch you out. Same page, added to each day."],"why":["You got 9 out of 15 vocabulary questions and <b>3 out of 13 grammar-word questions</b> on the same paper. That is a 37-point gap in one part of one section, and it is the clearest thing anyone's test showed.","It is also the one place in this whole group where drilling a single narrow thing beats mixed practice, because the rest of your Part 5 is already working. Step 3 is why: with grammar words the wrong options are wrong for a reason you can actually state out loud, unlike vocabulary where you either know the word or you do not. Say the reason and the rule sticks.","One honest caveat: this is 13 questions on one test. It is enough to act on for a week — it is not enough to rebuild your whole study plan around, so we will check it against your next test before going further."],"target":"23% climbing towards 45%, and a list of at least six prepositions you now know cold."},{"title":"Double passages, twice each","short":"Double passages","tag":"Reading","dose":"2 sets","time":"~40 min total","days":["Tue","Sat"],"intro":"One set untimed early in the week, a different set under the clock later. The order matters — do not swap it.","steps":["<b>Take a double-passage set. No timer.</b> Take as long as you want on this first one.","<b>Before answering, label each of the five questions:</b> text 1, text 2, or both. Just the label, before you go hunting.","<b>Answer, then check</b> — and note whether the ones you missed were the &ldquo;both&rdquo; questions or not. That answer is the whole experiment.","<b>Later in the week, do a second set with a 12-minute timer</b> and compare."],"why":["You scored 68% on single passages and 30% on doubles. There are two quite different explanations and we cannot yet tell them apart: either cross-referencing two documents is genuinely hard for you, or you simply arrived at question 181 with almost no time left, having run six minutes over. Doing one untimed settles it in forty minutes.","The labelling step teaches the mechanic itself. Usually only about one question in a five-question set truly needs both documents — the other four are answerable from one text. Students who know that stop re-reading everything twice.","We have not covered Part 7 in class yet, so treat this as learning something new rather than repairing something broken. A low score on an untaught part is information, not a verdict."],"target":"A clear answer to which of the two causes it is — that is worth more this week than the score itself."},{"title":"Gist first, options covered","short":"Gist listening","tag":"Listening","dose":"5 sets across the week","time":"~10 min each","days":["Mon","Tue","Wed","Thu","Fri"],"intro":"A short one, aimed at the single oddest thing in your results.","audio":["p3-03","p3-06","p3-09","p4-04","p4-08"],"audioTitle":"Five sets — three conversations, two talks","audioNote":"Weighted towards conversations on purpose: your first-question score was 4 out of 10 on Part 3 against 6 out of 10 on Part 4, so that is where the frame is going missing. One a day.","steps":["<b>Cover the questions and the options completely.</b> Paper over the page, or scroll them off screen. Play the recording once.","<b>Say out loud, or write in one sentence:</b> who is talking, where they are, and why they are talking.","<b>Only now uncover the questions</b> and answer them normally.","<b>Check your summary too</b>, not just your answers. Was the situation what you thought it was?"],"why":["You score 80% on the last question of each set and 50% on the first. Almost every student is the other way round, which makes this genuinely your own pattern: you are catching the details but not the situation they sit in.","That matters more than it sounds, because the first question in a Part 3 or Part 4 set is nearly always topic, purpose, or who is speaking. Across the whole listening section that is around twenty marks sitting in one question type you are getting half right.","Covering the options is the part that does the work. With the options visible it is too easy to match a word you heard; with them hidden you have to actually build the picture."],"target":"Your first-question accuracy up from 50% towards 70%, and a summary that matches the recording four times out of five.","clips":[{"id":"p3-03","label":"Conversation 3","q":"47-49","start":168.8,"end":207,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p3.mp3"},{"id":"p3-06","label":"Conversation 6","q":"56-58","start":404.05,"end":440.3,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p3.mp3"},{"id":"p3-09","label":"Conversation 9","q":"65-67","start":628.15,"end":671.45,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p3.mp3"},{"id":"p4-04","label":"Talk 4","q":"80-82","start":280.2,"end":315.55,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p4.mp3"},{"id":"p4-08","label":"Talk 8","q":"92-94","start":616.85,"end":651.95,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p4.mp3"}]}],"bringLede":"Bring these three. The second one especially — it answers a question I cannot answer without you.","bring":["Your running list of prepositions from the grammar-word sets","The labelled double-passage set, and whether doing it untimed actually helped","Two of your gist summaries — one that was right and one that was wrong"]};
+const HW = {"slug":"jeen","nick":"Jeen","class":"3","weekOf":"2026-08-10","weekLabel":"10 August 2026","dailyLoad":"About 30 minutes a day","focus":["Grammar words","Double passages","Listening gist"],"tiles":[{"lbl":"This week","val":"3","sub":"assignments, five days"},{"lbl":"Your estimate now","val":"425<small>–565</small>","sub":"listening 65 · reading 48"},{"lbl":"Your clearest gap","val":"37<small>pts</small>","sub":"grammar words vs vocabulary"}],"why":{"lede":"You have the strongest listening in the group, and something in your results that nobody else managed: you never lost a whole recording. Every single conversation and talk gave you at least one mark. What your test shows is not general weakness — it is two very specific things and one unusual habit. Specific is good. Specific is fixable.","points":[{"label":"Part 5: grammar words vs vocabulary","value":"23% vs 60%","note":"Your vocabulary is a genuine strength. Prepositions, conjunctions and pronouns are not — yet. This is the clearest single gap anyone in the group has."},{"label":"Part 7: one document vs two","value":"68% vs 30%","note":"Single passages are working well. The moment a question spans two documents, it falls away."},{"label":"Reading time used","value":"81 of 75 min","note":"Six minutes over — and the double passages are the last twenty questions on the paper. That may be part of the story above, and we should find out."},{"label":"Where your listening marks fall","value":"50% first, 80% last","note":"The reverse of most students. You catch the detail and miss the frame. Genuinely unusual, and worth a week of attention."}]},"assignments":[{"title":"Grammar words only, five a day","short":"Grammar words","tag":"Reading","dose":"5 items a day","time":"~15 min","days":["Mon","Tue","Wed","Thu","Fri"],"intro":"Not mixed sets this week. Prepositions, conjunctions and relative pronouns, and nothing else.","steps":["<b>Five sentences a day</b> — every one is a grammar-word question. Nothing else this week.","<b>Answer them.</b>","<b>Before you press Check, say why each wrong option is wrong.</b> Then read the explanations and see how close you were. This is the actual exercise.","<b>Keep one running list</b> all week of the prepositions that catch you out — on paper, added to each day."],"why":["You got 9 out of 15 vocabulary questions and <b>3 out of 13 grammar-word questions</b> on the same paper. That is a 37-point gap in one part of one section, and it is the clearest thing anyone's test showed.","It is also the one place in this whole group where drilling a single narrow thing beats mixed practice, because the rest of your Part 5 is already working. Step 3 is why: with grammar words the wrong options are wrong for a reason you can actually state out loud, unlike vocabulary where you either know the word or you do not. Say the reason and the rule sticks.","One honest caveat: this is 13 questions on one test. It is enough to act on for a week — it is not enough to rebuild your whole study plan around, so we will check it against your next test before going further."],"target":"23% climbing towards 45%, and at least six prepositions you now know cold.","exercise":{"type":"sentences","source":"bank","filter":"g","count":25,"perUnit":5,"perDay":1,"note":"Twenty-five sentences written for you, all prepositions, conjunctions and relative pronouns. Check gives you the reason every option is right or wrong — that is the part that does the work.","units":[{"title":"Set 1","sub":"5 questions","qs":[{"stem":"The shipment will be delayed ___ the storm has cleared the northern routes.","opts":["since","while","until","during"],"a":2,"why":["'Since' would give a reason or a start point, neither of which fits a future delay.","'While' means at the same time, which reverses the meaning.","Correct — 'until' marks the point in time when the delay ends.","'During' takes a noun, not a clause."]},{"stem":"All visitors must sign in at reception ___ they enter the laboratory.","opts":["whether","despite","before","among"],"a":2,"why":["'Whether' introduces a choice, not a time.","'Despite' needs a contrast and takes a noun phrase.","Correct — signing in happens first, so 'before' orders the two events.","'Among' is a preposition of place within a group."]},{"stem":"The consultant ___ report we discussed yesterday has agreed to extend the deadline.","opts":["who","whom","whose","which"],"a":2,"why":["'Who' would need to be the subject of a verb, not attached to 'report'.","'Whom' is an object pronoun and cannot take a noun after it.","Correct — 'whose' shows the report belongs to the consultant.","'Which' cannot show possession and is not used for people."]},{"stem":"Ms. Ferreira divided the budget ___ the four regional offices.","opts":["along","among","across from","between"],"a":1,"why":["'Along' describes movement beside something long.","Correct — 'among' is used for more than two.","'Across from' means opposite, a position, not a division.","'Between' is for two items, and there are four offices."]},{"stem":"___ the renovation is complete, the east wing will remain closed to staff.","opts":["Beyond","Until","Rather","Except"],"a":1,"why":["'Beyond' is a preposition of place or degree.","Correct — the closure lasts up to that point.","'Rather' is an adverb and cannot introduce a clause.","'Except' introduces an exclusion, not a time."]}]},{"title":"Set 2","sub":"5 questions","qs":[{"stem":"The technician arrived promptly, ___ the parts he needed did not.","opts":["but","for","or","so"],"a":0,"why":["Correct — the two clauses contrast.","'For' would give a reason, and a missing part does not explain a prompt arrival.","'Or' offers an alternative, not a contrast.","'So' would make the second clause a result of the first."]},{"stem":"Applications submitted ___ the deadline will not be considered by the panel.","opts":["already","after","soon","while"],"a":1,"why":["'Already' is an adverb of time and cannot take an object.","Correct — 'after' takes the noun 'the deadline' and gives the reason for rejection.","'Soon' is an adverb and cannot be followed by a noun this way.","'While' introduces a clause, not a bare noun."]},{"stem":"The training session was postponed ___ the low number of registrations.","opts":["therefore","because of","although","because"],"a":1,"why":["'Therefore' is an adverb joining sentences, not a preposition.","Correct — 'because of' takes a noun phrase.","'Although' signals contrast, not cause.","'Because' needs a full clause with a verb."]},{"stem":"Employees ___ complete the safety course early may leave one hour sooner on Friday.","opts":["who","whom","which","whose"],"a":0,"why":["Correct — 'who' is the subject of 'complete'.","'Whom' is an object pronoun, but this pronoun is doing the action.","'Which' is not used for people.","'Whose' shows possession and would need a noun after it."]},{"stem":"The new filing system is far more efficient ___ the one it replaced.","opts":["than","from","as","then"],"a":0,"why":["Correct — comparatives with '-er' or 'more' take 'than'.","'From' is used with 'different', not with 'more efficient'.","'As' is used with 'as … as', not with 'more'.","'Then' refers to time and is a common spelling trap here."]}]},{"title":"Set 3","sub":"5 questions","qs":[{"stem":"___ of the two proposals was accepted, so the committee will meet again in June.","opts":["Both","None","Either","Neither"],"a":3,"why":["'Both' would take a plural verb and also contradicts the meaning.","'None' is used for three or more.","'Either' is positive and would contradict the second clause.","Correct — 'neither' is the negative form for exactly two."]},{"stem":"Please forward the invoice to accounting ___ you receive it from the supplier.","opts":["as well as","in case of","so that","as soon as"],"a":3,"why":["'As well as' adds items; it does not introduce a time clause.","'In case of' takes a noun, not a clause.","'So that' gives a purpose, but forwarding is not the purpose of receiving.","Correct — 'as soon as' links two events in time."]},{"stem":"The conference room can seat forty people, ___ makes it the largest space on this floor.","opts":["what","that","who","which"],"a":3,"why":["'What' does not refer back to something already stated.","'That' cannot be used after a comma in this pattern.","'Who' is only for people.","Correct — after a comma, 'which' refers back to the whole idea."]},{"stem":"Deliveries are accepted ___ 9 a.m. and 4 p.m. on weekdays.","opts":["within","among","during","between"],"a":3,"why":["'Within' would take a single period, such as 'within two hours'.","'Among' is for a group of three or more.","'During' takes one noun, not a pair joined by 'and'.","Correct — 'between … and …' marks two endpoints."]},{"stem":"___ the heavy rain, the outdoor ceremony went ahead as planned.","opts":["Although","However","Because of","Despite"],"a":3,"why":["'Although' needs a clause with a verb.","'However' joins sentences and needs different punctuation.","'Because of' gives a cause, which reverses the meaning.","Correct — 'despite' takes a noun phrase and gives the contrast."]}]},{"title":"Set 4","sub":"5 questions","qs":[{"stem":"The manual explains ___ to reset the machine after a power failure.","opts":["that","which","what","how"],"a":3,"why":["'That' cannot be followed directly by 'to reset' here.","'Which' needs a choice between named options.","'What to reset' would change the meaning and leaves 'the machine' without a role.","Correct — 'how + to + verb' explains a method."]},{"stem":"Mr. Aoki will be away next week, so send any urgent requests ___ his assistant.","opts":["by","at","for","to"],"a":3,"why":["'By' would mean the assistant did the sending.","'At' marks a place, not a recipient.","'For' would mean on the assistant's behalf.","Correct — you send something 'to' a person."]},{"stem":"___ you need assistance with the software, contact the help desk on extension 4.","opts":["Whether","Even","Unless","If"],"a":3,"why":["'Whether' presents two possibilities and does not fit a single condition.","'Even' is not a conjunction on its own; 'even if' would be.","'Unless' means 'if not', which reverses the meaning.","Correct — a simple condition."]},{"stem":"The warehouse is located ___ the river, about two kilometres from the port.","opts":["through","between","among","along"],"a":3,"why":["'Through' describes passing from one side to the other.","'Between' needs two endpoints.","'Among' needs a group of things.","Correct — 'along' follows the line of something long."]},{"stem":"Neither the supervisor ___ the technicians were informed of the schedule change.","opts":["but","or","and","nor"],"a":3,"why":["'But' introduces contrast and cannot follow 'neither' here.","'Or' pairs with 'either', not 'neither'.","'And' would make the sentence positive.","Correct — 'neither' pairs with 'nor'."]}]},{"title":"Set 5","sub":"5 questions","qs":[{"stem":"The report must be approved by the director ___ it can be sent to the client.","opts":["until","after","since","before"],"a":3,"why":["'Until' would mean the sending continues up to approval, which is illogical.","'After' reverses the order of events.","'Since' gives a reason or a start point.","Correct — approval comes first."]},{"stem":"All items ___ in the catalogue are currently in stock.","opts":["listing","lists","list","listed"],"a":3,"why":["'Listing' would mean the items are doing the listing.","'Lists' has the same problem and does not agree with the plural noun.","'List' would need a subject and would leave the sentence with two main verbs.","Correct — a reduced relative clause: items that are listed."]},{"stem":"The seminar was cancelled ___ short notice, and refunds will be issued this week.","opts":["in","by","at","on"],"a":3,"why":["'In' is not used with 'short notice'.","'By' would indicate an agent or a deadline.","'At' is used with clock times, not this phrase.","Correct — 'on short notice' is the fixed expression."]},{"stem":"___ arriving at the site, all contractors must report to the safety officer.","opts":["Since","During","While","Upon"],"a":3,"why":["'Since' marks a starting point in the past.","'During' takes a noun, not an '-ing' clause of this kind.","'While arriving' suggests an ongoing action, which does not fit a single moment.","Correct — 'upon + -ing' means immediately when something happens."]},{"stem":"The figures in the summary differ ___ those in the original spreadsheet.","opts":["than","with","to","from"],"a":3,"why":["'Than' is used with comparatives such as 'more' or '-er'.","'With' would suggest disagreeing with a person.","'To' is not used after 'differ' in this sense.","Correct — 'differ from' is the standard pairing."]}]}]}},{"title":"Double passages, twice each","short":"Double passages","tag":"Reading","dose":"2 sets","time":"~40 min total","days":["Tue","Sat"],"intro":"One set untimed early in the week, a different set under the clock later. The order matters — do not swap it.","steps":["<b>Take a double-passage set. No timer.</b> Take as long as you want on this first one.","<b>Before answering, label each of the five questions:</b> text 1, text 2, or both. Just the label, before you go hunting.","<b>Answer, then check</b> — and note whether the ones you missed were the &ldquo;both&rdquo; questions or not. That answer is the whole experiment.","<b>Later in the week, do a second set with a 12-minute timer</b> and compare."],"why":["You scored 68% on single passages and 30% on doubles. There are two quite different explanations and we cannot yet tell them apart: either cross-referencing two documents is genuinely hard for you, or you simply arrived at question 181 with almost no time left, having run six minutes over. Doing one untimed settles it in forty minutes.","The labelling step teaches the mechanic itself. Usually only about one question in a five-question set truly needs both documents — the other four are answerable from one text. Students who know that stop re-reading everything twice.","We have not covered Part 7 in class yet, so treat this as learning something new rather than repairing something broken. A low score on an untaught part is information, not a verdict."],"target":"A clear answer to which of the two causes it is — that is worth more this week than the score itself.","exercise":{"type":"passage","sets":[181,186],"perDay":1,"note":"Two double-passage sets. Do the first with no timer at all. Come back to the second later in the week and give yourself twelve minutes.","units":[{"title":"Questions 181–185","sub":"letter and form","intro":"Questions 181–185 refer to the following letter and form.","html":"<div class='doc-title'>BLIXEN MEMORIAL THEATER<br><small style='font-weight:400'>Annual Fundraising Event · January 19</small></div><p>Dear Friend of Blixen Memorial Theater:</p><p>As a non-profit performing arts organization, we rely on membership and fundraising efforts to support our operating costs. Every year at this time we hold a drawing to help raise funds to meet a portion of our budget.</p><p>This is your chance to help Blixen Memorial Theater. Each individual who donates $20 to the theater at this time will be eligible for a special prize. On May 20, we will select one name at random to receive this year's prize – 4 tickets to each of the 10 Blixen Memorial Theater performances for the upcoming year. (The winner need not be present.) That's 40 tickets, a $3,000 value!</p><p>To participate in this year's drawing, simply complete the entry form and mail it with your payment. We will send you a confirmation number for each $20 donation upon receipt. Every $20 you donate increases your chances of winning a whole year's worth of exciting performances. And even if your name is not selected, you'll still win by helping Blixen Memorial Theater offer high-quality programs.</p><p>For further information, call the office at (507) 555-8826, ext. 908.</p><p>Sincerely,<br><b>Anna Kessler</b><br>Executive Director</p><hr style='border:none;border-top:1px dashed #c9be7a;margin:14px 0'><p><b>ENTRY FORM</b></p><p>Name: <u>Anton Maldonado</u><br>I have enclosed a check for $ <u>&nbsp;&nbsp;&nbsp;&nbsp;</u> &nbsp;&nbsp; Address: <u>14 Sunset Drive</u><br>Please charge my credit card: <u>$40</u> &nbsp;&nbsp; City: <u>Stockton</u> &nbsp; State: <u>MN</u> &nbsp; Zip: <u>55988</u><br>Card #: <u>1122334455667788</u> &nbsp;&nbsp; Phone: <u>507-555-2292</u><br>Signature: <u>Anton Maldonado</u></p><p>Please return this form with payment to:<br><b>BLIXEN MEMORIAL THEATER</b>, Attention: Raffle, 480 Sioux St., Winona, MN 55987</p>","qs":[{"n":181,"stem":"Why did Ms. Kessler write this letter?","opts":["To invite Anton Maldonado to an event","To advertise a new show","To explain a new ticketing policy","To announce a fund-raising event"],"a":3},{"n":182,"stem":"What does Ms. Kessler say about the Blixen Memorial Theater?","opts":["It has had to reduce its budget.","Its next season begins on May 20.","It holds an annual drawing.","It is offering discount tickets to people who donate money."],"a":2},{"n":183,"stem":"What prize is being offered?","opts":["A check for $3,000","A year's worth of theater tickets","Front-row seats to four performances","Meetings with performers after the shows"],"a":1},{"n":184,"stem":"In the letter, the word “present” in paragraph 2, line 4 is closest in meaning to","opts":["in attendance","current","on hold","performing"],"a":0},{"n":185,"stem":"What does Anton Maldonado indicate on the form?","opts":["He will purchase tickets to two shows.","He will contribute to the theater.","He is paying by personal check.","He would like a schedule for the new season."],"a":1}]},{"title":"Questions 186–190","sub":"e-mail and invoice","intro":"Questions 186–190 refer to the following e-mail and invoice.","html":"<div class='memohead'>To: Scott Abernathy &lt;sa@zenith.com&gt;<br>From: Mike O'Malley &lt;momalley@communicate.com&gt;<br>Subject: Shipment<br>Date: June 22</div><p>Hi Scott,</p><p>I'm glad I was able to reach you on the phone today before you shipped my order. As I mentioned, I'd like to change the delivery date to Thursday. In addition, instead of shipping the entire order to our warehouse, please send 10 of the 50 silk lamp shades and 10 of the parchment lamp shades to the showroom on Congress Avenue.</p><p>By the way, I want to thank you again for recommending me to Vincent Balasco as a potential supplier for his furniture stores. We're meeting at the Congress Avenue showroom over the weekend so that he can have a look at the lamps, which is why I'll need the shades there. I'll let you know how it goes. Please send me a revised shipping order.</p><p>Best regards,<br>Mike</p><hr style='border:none;border-top:1px dashed #c9be7a;margin:14px 0'><div class='doc-title'>SHIPPING ORDER</div><p><b>CARRIER:</b> Metro Trucking · <b>BILL DATE:</b> June 23 · <b>SHIP DATE:</b> June 26</p><div class='tablewrap'><table><tr><th></th><th>TO</th><th>FROM</th></tr><tr><td>Name / Contact</td><td>Mike O'Malley<br>Bright Lights Warehouse<br>10649 Industry Road<br>Boston, Massachusetts</td><td>Zenith Lamp Part Warehouse<br>3387 South Ferry Road<br>Marshfield, Massachusetts<br>Contact: Scott Abernathy</td></tr><tr><td>Send invoice to</td><td colspan='2'>Mike O'Malley, Bright Lights Showroom, 1305 Congress Avenue, Boston, Massachusetts</td></tr></table></div><p><b>SHIPPER'S INSTRUCTIONS — SPLIT ORDER:</b> Deliver 10 silk shades, 10 parchment shades (separately packaged) to billing address. Deliver rest of order to Industry Road address.</p><div class='tablewrap'><table><tr><th>No. shipping units</th><th>Description of articles</th><th>Size</th><th>Unit price $</th><th>Total charge $</th></tr><tr><td>50</td><td>Pleated silk shade, soft white</td><td>15 inches</td><td>12</td><td>600</td></tr><tr><td>50</td><td>Parchment shade, beige</td><td>18 inches</td><td>10</td><td>500</td></tr><tr><td>120</td><td>Brass sockets, 3-way turn knob</td><td>Medium T-14</td><td>3</td><td>360</td></tr><tr><td colspan='4'><b>TOTAL</b></td><td><b>$1,460</b></td></tr></table></div><p><i>Hi Mike,<br>Here's the revised shipping order. Good luck showing the lamps on Saturday. I think you'll like Vincent Balasco.<br>Scott</i></p>","qs":[{"n":186,"stem":"Why did Mike O'Malley contact Scott Abernathy?","opts":["To cancel a shipment","To change a shipping order","To invite him to the factory","To place a furniture order"],"a":1},{"n":187,"stem":"On which day will Vincent Balasco visit the showroom?","opts":["Thursday","Friday","Saturday","Sunday"],"a":2},{"n":188,"stem":"Why will part of the order be delivered to a different location?","opts":["Mike O'Malley wants to show his merchandise to a potential buyer.","The Industry Road Warehouse will be closed.","The Congress Avenue showroom is closer to the Zenith warehouse.","Mike O'Malley is opening a second showroom."],"a":0},{"n":189,"stem":"Who is Vincent Balasco?","opts":["A warehouse clerk","A furniture store owner","A lamp shade manufacturer","A truck driver"],"a":1},{"n":190,"stem":"How much is the total cost of the merchandise?","opts":["$360","$500","$600","$1,460"],"a":3}]}]}},{"title":"Gist first, options covered","short":"Gist listening","tag":"Listening","dose":"5 sets across the week","time":"~10 min each","days":["Mon","Tue","Wed","Thu","Fri"],"intro":"A short one, aimed at the single oddest thing in your results.","steps":["<b>Cover the questions and the options completely.</b> Paper over the page, or scroll them off screen. Play the recording once.","<b>Say out loud, or write in one sentence:</b> who is talking, where they are, and why they are talking.","<b>Only now uncover the questions</b> and answer them normally.","<b>Check your summary too</b>, not just your answers. Was the situation what you thought it was?"],"why":["You score 80% on the last question of each set and 50% on the first. Almost every student is the other way round, which makes this genuinely your own pattern: you are catching the details but not the situation they sit in.","That matters more than it sounds, because the first question in a Part 3 or Part 4 set is nearly always topic, purpose, or who is speaking. Across the whole listening section that is around twenty marks sitting in one question type you are getting half right.","Covering the options is the part that does the work. With the options visible it is too easy to match a word you heard; with them hidden you have to actually build the picture."],"target":"Your first-question accuracy up from 50% towards 70%, and a summary that matches the recording four times out of five.","exercise":{"type":"listen","clips":["p3-03","p3-06","p3-09","p4-04","p4-08"],"perDay":1,"fields":["Who is talking, where are they, and why?"],"fieldKind":"area","note":"Write your summary before you look at the questions. Scroll past them if you have to — that is the whole point.","units":[{"title":"Conversation 3","sub":"Questions 47-49","clip":{"id":"p3-03","label":"Conversation 3","q":"47-49","start":168.8,"end":207,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p3.mp3"},"fields":["Who is talking, where are they, and why?"],"fieldKind":"area","qs":[{"n":47,"stem":"When does the last interview start?","opts":["At 9:00","At 10:00","At 11:00","At 12:00"],"a":2},{"n":48,"stem":"Who is the man planning to visit this afternoon?","opts":["A client","A job applicant","A relative","A doctor"],"a":3},{"n":49,"stem":"Why might the woman make a telephone call?","opts":["To arrange a job interview","To request some paperwork","To change a meeting time","To purchase some supplies"],"a":2}]},{"title":"Conversation 6","sub":"Questions 56-58","clip":{"id":"p3-06","label":"Conversation 6","q":"56-58","start":404.05,"end":440.3,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p3.mp3"},"fields":["Who is talking, where are they, and why?"],"fieldKind":"area","qs":[{"n":56,"stem":"Where does this conversation take place?","opts":["At a hotel","At an office supplies store","At a train station","At a restaurant"],"a":0},{"n":57,"stem":"What is the man looking for?","opts":["A hotel room","A briefcase","A folder","An article"],"a":2},{"n":58,"stem":"What does the woman offer to do?","opts":["Pay for breakfast","Look for a lost item","Organize a training session","Write a magazine article"],"a":1}]},{"title":"Conversation 9","sub":"Questions 65-67","clip":{"id":"p3-09","label":"Conversation 9","q":"65-67","start":628.15,"end":671.45,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p3.mp3"},"fields":["Who is talking, where are they, and why?"],"fieldKind":"area","qs":[{"n":65,"stem":"Where do the speakers probably work?","opts":["At a university","At a power plant","At a manufacturing company","At a publishing company"],"a":0},{"n":66,"stem":"What is the proposal about?","opts":["Adopting a flexible work schedule","Appointing new board members","Reducing energy costs","Recycling paper in the office"],"a":2},{"n":67,"stem":"When will the proposal be presented to the board?","opts":["This morning","Next week","In two weeks","In two months"],"a":1}]},{"title":"Talk 4","sub":"Questions 80-82","clip":{"id":"p4-04","label":"Talk 4","q":"80-82","start":280.2,"end":315.55,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p4.mp3"},"fields":["Who is talking, where are they, and why?"],"fieldKind":"area","qs":[{"n":80,"stem":"Where is the speaker?","opts":["In a keyboard factory","At a concert hall","In a biology laboratory","At an electronics store"],"a":0},{"n":81,"stem":"What is the speaker discussing?","opts":["An upcoming performance","Company research plans","Machine operating instructions","Factory quality inspections"],"a":1},{"n":82,"stem":"When will the newest model probably be released?","opts":["In two months","In one year","In two years","In five years"],"a":2}]},{"title":"Talk 8","sub":"Questions 92-94","clip":{"id":"p4-08","label":"Talk 8","q":"92-94","start":616.85,"end":651.95,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p4.mp3"},"fields":["Who is talking, where are they, and why?"],"fieldKind":"area","qs":[{"n":92,"stem":"Who most likely is being addressed?","opts":["Participants in a training seminar","Instructors for a writing course","Reporters at a press conference","Visitors to a museum"],"a":0},{"n":93,"stem":"What are audience members asked to do?","opts":["Leave the room","Write a report","Pick up some papers","Introduce themselves to Mr. Chang"],"a":2},{"n":94,"stem":"What will Mr. Chang probably do?","opts":["Describe a recent event","Distribute course materials","Introduce a speaker","Discuss sales techniques"],"a":3}]}]}}],"bringLede":"Bring these three. The second one especially — it answers a question I cannot answer without you.","bring":["Your running list of prepositions from the grammar-word sets","The labelled double-passage set, and whether doing it untimed actually helped","Two of your gist summaries — one that was right and one that was wrong"]};
 
 /* Assignment accents, in order. Page chrome stays orange, so these three are
    the only other hues on the page and each one owns exactly one assignment. */
@@ -359,7 +459,7 @@ function audioBlock(a){
         ' data-start="' + c.start + '" data-end="' + c.end + '">' +
         '<span class="pl">&#9654;</span>' +
         '<span class="nm">' + esc(c.label) +
-          '<span class="q">Q' + esc(c.q) + "</span></span>" +
+          '<span class="seg-q">Q' + esc(c.q) + "</span></span>" +
         '<span class="du">' + mmss(c.end - c.start) + "</span>" +
         '<span class="bar"><i></i></span>' +
       "</button></li>").join("") +
@@ -432,6 +532,236 @@ function playSeg(btn){
   el.addEventListener("timeupdate", tick);
 }
 
+/* ============================ exercises ============================
+   Every assignment is a working exercise, not a set of instructions: the real
+   questions, passages and audio are embedded, answers are saved per student
+   per week, and Check marks against the real key.
+
+   Answers ARE revealed after checking. That is the opposite of the score
+   report's rule, and deliberate: a report exists to be handed back without
+   burning the test, homework exists to be learned from. Practice Test 1 and
+   its key are public already, so nothing new is exposed. */
+const LETTERS = ["A","B","C","D"];
+const AKEY = "gm_hwx_" + HW.slug + "_" + HW.weekOf;
+
+/* Per-option explanations, keyed the same way the DOM is: a{assignment}-u{unit}.
+   Kept out of the markup so an unchecked question never carries its own
+   answer in an attribute a curious student could read. */
+const WHY = {};
+HW.assignments.forEach((a, ai) => {
+  if (!a.exercise) return;
+  (a.exercise.units || []).forEach((u, ui) => {
+    (u.qs || []).forEach((q, qi) => {
+      if (q.why) {
+        const uid = "a" + ai + "-u" + ui;
+        (WHY[uid] = WHY[uid] || {})[qi] = q.why;
+      }
+    });
+  });
+});
+let answers = {};
+try { answers = JSON.parse(localStorage.getItem(AKEY) || "{}"); } catch(e) { answers = {}; }
+const saveAnswers = () => { try { localStorage.setItem(AKEY, JSON.stringify(answers)); } catch(e) {} };
+
+function optionRows(uid, qi, opts){
+  return opts.map((o, k) =>
+    '<label class="opt" data-k="' + k + '">' +
+      '<input type="radio" name="' + uid + "-" + qi + '" value="' + k + '">' +
+      '<span class="ol">' + LETTERS[k] + "</span>" +
+      "<span>" + o + "</span>" +
+      '<span class="mk"></span>' +
+    "</label>").join("");
+}
+
+function questionBlock(uid, qs){
+  return qs.map((q, qi) =>
+    '<div class="q" data-qi="' + qi + '" data-a="' + q.a + '">' +
+      '<div class="q-stem">' + (q.n ? "<b>" + q.n + "</b>" : "") +
+        (q.stem || "<i>Choose the word or phrase that best completes the blank.</i>") + "</div>" +
+      '<div class="opts">' + optionRows(uid, qi, q.opts) + "</div>" +
+      (q.why ? '<div class="why" hidden></div>' : "") +
+    "</div>").join("");
+}
+
+function fieldBlock(uid, fields, kind){
+  return fields.map((f, i) =>
+    '<div class="field"><label for="' + uid + "-f" + i + '">' + f + "</label>" +
+      (kind === "area"
+        ? '<textarea id="' + uid + "-f" + i + '" data-f="' + i + '"></textarea>'
+        : '<input id="' + uid + "-f" + i + '" data-f="' + i + '" type="text">') +
+    "</div>").join("");
+}
+
+function unitBlock(ex, u, idx){
+  const uid = ex.uid + "-u" + idx;
+  const clip = u.clip
+    ? '<button class="seg" aria-pressed="false" data-src="' + esc(u.clip.src) + '"' +
+      ' data-start="' + u.clip.start + '" data-end="' + u.clip.end + '">' +
+      '<span class="pl">&#9654;</span><span class="nm">Play' +
+      '<span class="seg-q">' + esc(u.clip.label) + "</span></span>" +
+      '<span class="du">' + mmss(u.clip.end - u.clip.start) + "</span>" +
+      '<span class="bar"><i></i></span></button>'
+    : "";
+  const psg = u.html
+    ? (u.intro ? '<p class="psg-more">' + esc(u.intro) + "</p>" : "") +
+      '<div class="psg">' + u.html + "</div>"
+    : "";
+  return '<article class="unit" data-uid="' + uid + '">' +
+    '<div class="unit-head"><span class="unit-ttl">' + esc(u.title) + "</span>" +
+      (u.sub ? '<span class="unit-sub">' + esc(u.sub) + "</span>" : "") +
+      '<span class="unit-score"></span></div>' +
+    clip +
+    (u.fields ? '<div class="fields">' + fieldBlock(uid, u.fields, u.fieldKind || "text") + "</div>" : "") +
+    psg +
+    '<div class="qs">' + questionBlock(uid, u.qs || []) + "</div>" +
+    '<div class="ex-actions">' +
+      '<button class="ex-btn" data-act="check">Check</button>' +
+      '<button class="ex-btn ghost" data-act="retry" hidden>Try again</button>' +
+      '<span class="ex-msg"></span>' +
+    "</div>" +
+  "</article>";
+}
+
+function timerBlock(ex){
+  if (!ex.timerSeconds) return "";
+  return '<div class="timer" data-secs="' + ex.timerSeconds + '">' +
+    '<span class="tv">' + mmss(ex.timerSeconds) + "</span>" +
+    '<span class="tl">' + esc(ex.timerLabel || "Start it when you begin.") + "</span>" +
+    '<button class="ex-btn ghost" data-act="timer">Start</button>' +
+    (ex.splits ? '<span class="splits"></span>' : "") +
+  "</div>";
+}
+
+function exerciseBlock(a, ai){
+  const ex = a.exercise;
+  if (!ex) return audioBlock(a);
+  ex.uid = "a" + ai;
+  const per = ex.perDay || ex.units.length;
+  /* The speed control used to live in the old audio block, which an exercise
+     replaces — leaving Tammy's "play it at 0.75x" step pointing at a button
+     that was no longer on the page. */
+  const hasClips = ex.units.some(u => u.clip);
+  let html = '<div class="ex">' + timerBlock(ex) +
+    (hasClips ? '<div class="audio-top"><span class="audio-ttl">' +
+      esc(ex.audioTitle || "Tap a recording to play it") + "</span>" +
+      '<button class="rate" aria-pressed="false" title="Slow every recording to three-quarter speed">0.75&times;</button>' +
+      "</div>" : "");
+  ex.units.forEach((u, i) => {
+    if (i % per === 0)
+      html += '<div class="ex-day">' + esc(ex.dayLabel
+        ? ex.dayLabel.replace("{n}", Math.floor(i / per) + 1)
+        : "Day " + (Math.floor(i / per) + 1)) + "</div>";
+    html += unitBlock(ex, u, i);
+  });
+  return html + (ex.note ? '<p class="audio-note">' + ex.note + "</p>" : "") + "</div>";
+}
+
+/* ---- marking ---- */
+function markUnit(unit, reveal){
+  const uid = unit.dataset.uid;
+  let right = 0, total = 0, answered = 0;
+  unit.querySelectorAll(".q").forEach((q, qi) => {
+    const a = +q.dataset.a;
+    const picked = answers[uid + "-" + qi];
+    total++;
+    if (picked !== undefined) answered++;
+    q.querySelectorAll(".opt").forEach((o, k) => {
+      o.classList.toggle("picked", !reveal && picked === k);
+      o.classList.remove("ok", "no");
+      o.querySelector(".mk").textContent = "";
+      if (!reveal) return;
+      if (k === a) { o.classList.add("ok"); o.querySelector(".mk").innerHTML = "&#10003;&#xFE0E;"; }
+      else if (picked === k) { o.classList.add("no"); o.querySelector(".mk").innerHTML = "&#10007;&#xFE0E;"; }
+    });
+    if (picked === a) right++;
+    const why = q.querySelector(".why");
+    if (why) {
+      const data = (WHY[uid] || {})[qi];
+      if (reveal && data) {
+        why.hidden = false;
+        why.innerHTML = "<b>Why " + LETTERS[a] + ":</b><ul>" +
+          data.map((w, k) => "<li><b>" + LETTERS[k] + "</b> — " + w + "</li>").join("") + "</ul>";
+      } else why.hidden = true;
+    }
+  });
+  unit.classList.toggle("marked", !!reveal);
+  unit.querySelector('[data-act="check"]').hidden = !!reveal;
+  unit.querySelector('[data-act="retry"]').hidden = !reveal;
+  unit.querySelector(".unit-score").textContent = reveal ? right + " / " + total : "";
+  if (!reveal)
+    unit.querySelector(".ex-msg").textContent =
+      answered ? answered + " of " + total + " answered" : "";
+  else
+    unit.querySelector(".ex-msg").textContent =
+      right === total ? "All correct." : (total - right) + " to look at again.";
+  return { right, total };
+}
+
+function wireExercises(root){
+  root.querySelectorAll(".unit").forEach(unit => {
+    const uid = unit.dataset.uid;
+    /* restore answers and any saved free text */
+    unit.querySelectorAll(".q").forEach((q, qi) => {
+      const picked = answers[uid + "-" + qi];
+      q.querySelectorAll(".opt").forEach((o, k) => {
+        const input = o.querySelector("input");
+        input.checked = picked === k;
+        o.addEventListener("click", e => {
+          if (unit.classList.contains("marked")) { e.preventDefault(); return; }
+          answers[uid + "-" + qi] = k; saveAnswers();
+          /* Set the radio here and repaint synchronously. Deferring this with
+             setTimeout(0) raced with Check: the deferred repaint landed after
+             the marking and wiped it. */
+          input.checked = true;
+          markUnit(unit, false);
+        });
+      });
+    });
+    unit.querySelectorAll("[data-f]").forEach(el => {
+      const key = uid + "-f" + el.dataset.f;
+      if (answers[key] !== undefined) el.value = answers[key];
+      el.addEventListener("input", () => { answers[key] = el.value; saveAnswers(); });
+    });
+    unit.querySelector('[data-act="check"]').addEventListener("click", () => {
+      answers[uid + "-checked"] = true; saveAnswers();
+      markUnit(unit, true);
+      unit.scrollIntoView({ block: "nearest" });
+    });
+    unit.querySelector('[data-act="retry"]').addEventListener("click", () => {
+      unit.querySelectorAll(".q").forEach((q, qi) => delete answers[uid + "-" + qi]);
+      unit.querySelectorAll("input[type=radio]").forEach(i => i.checked = false);
+      delete answers[uid + "-checked"]; saveAnswers();
+      markUnit(unit, false);
+    });
+    markUnit(unit, answers[uid + "-checked"] === true);
+  });
+
+  /* countdown timers */
+  root.querySelectorAll(".timer").forEach(t => {
+    const total = +t.dataset.secs;
+    let left = total, iv = null;
+    const tv = t.querySelector(".tv"), btn = t.querySelector('[data-act="timer"]');
+    const splits = t.querySelector(".splits");
+    const paint = () => {
+      tv.textContent = (left < 0 ? "+" : "") + mmss(Math.abs(left));
+      t.classList.toggle("over", left < 0);
+    };
+    btn.addEventListener("click", () => {
+      if (iv) {
+        clearInterval(iv); iv = null; btn.textContent = "Start";
+        if (splits) {
+          const used = total - left;
+          splits.textContent += (splits.textContent ? " · " : "Split: ") + mmss(used);
+        }
+        return;
+      }
+      btn.textContent = splits ? "Mark a split" : "Pause";
+      iv = setInterval(() => { left--; paint(); }, 1000);
+    });
+    paint();
+  });
+}
+
 function wireAudio(root){
   root.querySelectorAll(".seg").forEach(btn => btn.addEventListener("click", () => {
     if (active === btn) stopActive(); else playSeg(btn);
@@ -491,14 +821,16 @@ document.getElementById("assignments").innerHTML = HW.assignments.map((a,i) =>
       '<span class="chip">' + esc(a.dose) + "</span>" +
       '<span class="chip">' + esc(a.time) + "</span>" +
     "</div>" +
-    '<div class="asg-body"><p>' + a.intro + "</p>" + audioBlock(a) +
+    '<div class="asg-body"><p>' + a.intro + "</p>" +
     "<ol class=\"steps\">" + a.steps.map(s => "<li>" + s + "</li>").join("") + "</ol>" +
+    exerciseBlock(a, i) +
     '<div class="finding"><div class="ft">Why this one</div><p>' +
       a.why.join("</p><p>") + "</p></div>" +
     '<p class="target"><b>What good looks like by Friday:</b> ' + a.target + "</p>" +
     "</div>" +
   "</article>").join("");
 wireAudio(document.getElementById("assignments"));
+wireExercises(document.getElementById("assignments"));
 
 /* ---------- tracker ----------
    Ticks live in this browser only, like the lesson pages. A different phone or

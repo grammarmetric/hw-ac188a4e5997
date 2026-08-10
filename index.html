@@ -44,6 +44,9 @@
   --gap:18px; --pad-card:24px;
 }
 :root, :root[data-theme="dark"]{
+  /* Native controls read this. Without it the tracker's unchecked boxes render
+     as solid white squares on the black card. */
+  color-scheme:dark;
   --bg:#050505; --text:#ffffff;
   --muted:rgba(255,255,255,0.55);
   --card:rgba(255,255,255,0.04);
@@ -53,6 +56,7 @@
   --ok-ink:var(--gm-cyan);
 }
 :root[data-theme="light"]{
+  color-scheme:light;
   --bg:#ffffff; --text:#050505;
   --muted:rgba(5,5,5,0.62);        /* site deviation: 0.55 fails on tints */
   --card:rgba(5,5,5,0.03);
@@ -156,6 +160,8 @@ ol.steps li::before{content:counter(s); position:absolute; left:0; top:1px;
 .trk th:first-child,.trk td:first-child{text-align:left; padding-left:0;
   font-size:14px; min-width:120px;}
 .trk thead th{color:var(--muted); font-weight:400; font-size:12.5px;}
+/* the footer already draws a rule, so the last row must not draw a second */
+.trk tbody tr:last-child td{border-bottom:0;}
 .trkwrap{overflow-x:auto;}
 .trk input[type="checkbox"]{width:22px; height:22px; accent-color:var(--accent);
   cursor:pointer; margin:0;}

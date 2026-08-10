@@ -194,6 +194,53 @@ ol.steps li::before{content:counter(s); position:absolute; left:0; top:1px;
   font-weight:500; display:flex; align-items:center; justify-content:center;}
 :root[data-theme="light"] ol.steps li::before{background:rgba(var(--accent-rgb),0.30);}
 
+/* ---------- audio ----------
+   Reads as an inset device panel rather than more prose, so the play targets
+   are obvious. Darker than the card in dark mode, lighter in light mode —
+   flat translucent fills, no shadow. */
+.audio{margin-top:20px; border-radius:var(--radius-card); padding:15px 16px 13px;
+  background:rgba(0,0,0,0.30); border:1px solid rgba(var(--accent-rgb),0.30);}
+:root[data-theme="light"] .audio{background:rgba(255,255,255,0.62);
+  border-color:rgba(var(--accent-text-rgb),0.24);}
+.audio-top{display:flex; align-items:center; gap:10px; margin-bottom:12px;}
+.audio-ttl{font-size:13px; font-weight:500; color:var(--accent-ink); flex:1;}
+.rate{font-family:inherit; font-size:12.5px; font-weight:500; padding:5px 12px;
+  min-height:32px; border-radius:var(--radius-pill); cursor:pointer;
+  background:transparent; color:var(--muted);
+  border:1px solid var(--line-strong);}
+.rate[aria-pressed="true"]{background:var(--accent); color:var(--accent-text);
+  border-color:transparent;}
+.rate:focus-visible{outline:2px solid var(--accent-ink); outline-offset:2px;}
+
+.segs{list-style:none; display:flex; flex-direction:column; gap:6px;}
+.seg{position:relative; overflow:hidden; width:100%; display:flex; align-items:center;
+  gap:12px; text-align:left; font-family:inherit; font-size:14.5px; color:var(--text);
+  background:transparent; border:1px solid var(--line); cursor:pointer;
+  border-radius:var(--radius-control); padding:9px 13px 9px 9px; min-height:52px;}
+.seg:hover{border-color:rgba(var(--accent-rgb),0.45);}
+.seg:focus-visible{outline:2px solid var(--accent-ink); outline-offset:2px;}
+.seg[aria-pressed="true"]{border-color:rgba(var(--accent-rgb),0.55);
+  background:rgba(var(--accent-rgb),0.10);}
+/* icon badge, guide spec: bright fill, darkened same-hue ink, 9px radius */
+.seg .pl{flex:0 0 auto; width:34px; height:34px; border-radius:var(--radius-badge);
+  background:var(--accent); color:var(--accent-text); display:flex;
+  align-items:center; justify-content:center; font-size:13px; line-height:1;}
+.seg .nm{flex:1; min-width:0;}
+.seg .q{color:var(--muted); font-size:13px; margin-left:7px; white-space:nowrap;}
+.seg .du{flex:0 0 auto; font-size:13px; color:var(--muted);
+  font-variant-numeric:tabular-nums;}
+/* progress hairline pinned to the bottom edge of the row */
+.seg .bar{position:absolute; left:0; right:0; bottom:0; height:3px;
+  background:transparent;}
+.seg .bar i{display:block; height:100%; width:0; background:var(--accent);
+  transition:width .25s linear;}
+.seg.busy .pl{opacity:.55;}
+.audio-note{font-size:13px; color:var(--muted); margin-top:11px;
+  padding-top:10px; border-top:1px solid var(--line);}
+@media (max-width:600px){
+  .seg .q{display:block; margin-left:0;}
+}
+
 /* ---------- why-this-one callout ---------- */
 .finding{background:rgba(var(--accent-rgb),0.12);
   border:1px solid rgba(var(--accent-rgb),0.26);
@@ -284,7 +331,7 @@ ul.wins li::before{content:""; position:absolute; left:0; top:9px; width:7px;
    Generated from _build/template.html by _build/build.mjs. Do not edit this
    file directly; edit the template or the student's JSON and rebuild.
    ============================================================================ */
-const HW = {"slug":"jeen","nick":"Jeen","class":"3","weekOf":"2026-08-10","weekLabel":"10 August 2026","dailyLoad":"About 30 minutes a day","focus":["Grammar words","Double passages","Listening gist"],"tiles":[{"lbl":"This week","val":"3","sub":"assignments, five days"},{"lbl":"Your estimate now","val":"425<small>–565</small>","sub":"listening 65 · reading 48"},{"lbl":"Your clearest gap","val":"37<small>pts</small>","sub":"grammar words vs vocabulary"}],"why":{"lede":"You have the strongest listening in the group, and something in your results that nobody else managed: you never lost a whole recording. Every single conversation and talk gave you at least one mark. What your test shows is not general weakness — it is two very specific things and one unusual habit. Specific is good. Specific is fixable.","points":[{"label":"Part 5: grammar words vs vocabulary","value":"23% vs 60%","note":"Your vocabulary is a genuine strength. Prepositions, conjunctions and pronouns are not — yet. This is the clearest single gap anyone in the group has."},{"label":"Part 7: one document vs two","value":"68% vs 30%","note":"Single passages are working well. The moment a question spans two documents, it falls away."},{"label":"Reading time used","value":"81 of 75 min","note":"Six minutes over — and the double passages are the last twenty questions on the paper. That may be part of the story above, and we should find out."},{"label":"Where your listening marks fall","value":"50% first, 80% last","note":"The reverse of most students. You catch the detail and miss the frame. Genuinely unusual, and worth a week of attention."}]},"assignments":[{"title":"Grammar words only, fifteen a day","short":"Grammar words","tag":"Reading","dose":"15 items a day","time":"~15 min","days":["Mon","Tue","Wed","Thu","Fri"],"intro":"Not mixed sets this week. Prepositions, conjunctions and relative pronouns, and nothing else.","steps":["<b>Fifteen Part 5 items</b> — only the ones where the four options are grammar words: <i>among / whether / who / despite</i> and friends. Skip the vocabulary and word-form ones.","<b>Answer them.</b>","<b>For each question, write why each of the three wrong options is wrong.</b> All three. This is the actual exercise — the answering part is just setup.","<b>Keep one running list</b> all week of the prepositions that catch you out. Same page, added to each day."],"why":["You got 9 out of 15 vocabulary questions and <b>3 out of 13 grammar-word questions</b> on the same paper. That is a 37-point gap in one part of one section, and it is the clearest thing anyone's test showed.","It is also the one place in this whole group where drilling a single narrow thing beats mixed practice, because the rest of your Part 5 is already working. Step 3 is why: with grammar words the wrong options are wrong for a reason you can actually state out loud, unlike vocabulary where you either know the word or you do not. Say the reason and the rule sticks.","One honest caveat: this is 13 questions on one test. It is enough to act on for a week — it is not enough to rebuild your whole study plan around, so we will check it against your next test before going further."],"target":"23% climbing towards 45%, and a list of at least six prepositions you now know cold."},{"title":"Double passages, twice each","short":"Double passages","tag":"Reading","dose":"2 sets","time":"~40 min total","days":["Tue","Sat"],"intro":"One set untimed early in the week, a different set under the clock later. The order matters — do not swap it.","steps":["<b>Take a double-passage set. No timer.</b> Take as long as you want on this first one.","<b>Before answering, label each of the five questions:</b> text 1, text 2, or both. Just the label, before you go hunting.","<b>Answer, then check</b> — and note whether the ones you missed were the &ldquo;both&rdquo; questions or not. That answer is the whole experiment.","<b>Later in the week, do a second set with a 12-minute timer</b> and compare."],"why":["You scored 68% on single passages and 30% on doubles. There are two quite different explanations and we cannot yet tell them apart: either cross-referencing two documents is genuinely hard for you, or you simply arrived at question 181 with almost no time left, having run six minutes over. Doing one untimed settles it in forty minutes.","The labelling step teaches the mechanic itself. Usually only about one question in a five-question set truly needs both documents — the other four are answerable from one text. Students who know that stop re-reading everything twice.","We have not covered Part 7 in class yet, so treat this as learning something new rather than repairing something broken. A low score on an untaught part is information, not a verdict."],"target":"A clear answer to which of the two causes it is — that is worth more this week than the score itself."},{"title":"Gist first, options covered","short":"Gist listening","tag":"Listening","dose":"5 sets across the week","time":"~10 min each","days":["Mon","Tue","Wed","Thu","Fri"],"intro":"A short one, aimed at the single oddest thing in your results.","steps":["<b>Cover the questions and the options completely.</b> Paper over the page, or scroll them off screen. Play the recording once.","<b>Say out loud, or write in one sentence:</b> who is talking, where they are, and why they are talking.","<b>Only now uncover the questions</b> and answer them normally.","<b>Check your summary too</b>, not just your answers. Was the situation what you thought it was?"],"why":["You score 80% on the last question of each set and 50% on the first. Almost every student is the other way round, which makes this genuinely your own pattern: you are catching the details but not the situation they sit in.","That matters more than it sounds, because the first question in a Part 3 or Part 4 set is nearly always topic, purpose, or who is speaking. Across the whole listening section that is around twenty marks sitting in one question type you are getting half right.","Covering the options is the part that does the work. With the options visible it is too easy to match a word you heard; with them hidden you have to actually build the picture."],"target":"Your first-question accuracy up from 50% towards 70%, and a summary that matches the recording four times out of five."}],"bringLede":"Bring these three. The second one especially — it answers a question I cannot answer without you.","bring":["Your running list of prepositions from the grammar-word sets","The labelled double-passage set, and whether doing it untimed actually helped","Two of your gist summaries — one that was right and one that was wrong"]};
+const HW = {"slug":"jeen","nick":"Jeen","class":"3","weekOf":"2026-08-10","weekLabel":"10 August 2026","dailyLoad":"About 30 minutes a day","focus":["Grammar words","Double passages","Listening gist"],"tiles":[{"lbl":"This week","val":"3","sub":"assignments, five days"},{"lbl":"Your estimate now","val":"425<small>–565</small>","sub":"listening 65 · reading 48"},{"lbl":"Your clearest gap","val":"37<small>pts</small>","sub":"grammar words vs vocabulary"}],"why":{"lede":"You have the strongest listening in the group, and something in your results that nobody else managed: you never lost a whole recording. Every single conversation and talk gave you at least one mark. What your test shows is not general weakness — it is two very specific things and one unusual habit. Specific is good. Specific is fixable.","points":[{"label":"Part 5: grammar words vs vocabulary","value":"23% vs 60%","note":"Your vocabulary is a genuine strength. Prepositions, conjunctions and pronouns are not — yet. This is the clearest single gap anyone in the group has."},{"label":"Part 7: one document vs two","value":"68% vs 30%","note":"Single passages are working well. The moment a question spans two documents, it falls away."},{"label":"Reading time used","value":"81 of 75 min","note":"Six minutes over — and the double passages are the last twenty questions on the paper. That may be part of the story above, and we should find out."},{"label":"Where your listening marks fall","value":"50% first, 80% last","note":"The reverse of most students. You catch the detail and miss the frame. Genuinely unusual, and worth a week of attention."}]},"assignments":[{"title":"Grammar words only, fifteen a day","short":"Grammar words","tag":"Reading","dose":"15 items a day","time":"~15 min","days":["Mon","Tue","Wed","Thu","Fri"],"intro":"Not mixed sets this week. Prepositions, conjunctions and relative pronouns, and nothing else.","steps":["<b>Fifteen Part 5 items</b> — only the ones where the four options are grammar words: <i>among / whether / who / despite</i> and friends. Skip the vocabulary and word-form ones.","<b>Answer them.</b>","<b>For each question, write why each of the three wrong options is wrong.</b> All three. This is the actual exercise — the answering part is just setup.","<b>Keep one running list</b> all week of the prepositions that catch you out. Same page, added to each day."],"why":["You got 9 out of 15 vocabulary questions and <b>3 out of 13 grammar-word questions</b> on the same paper. That is a 37-point gap in one part of one section, and it is the clearest thing anyone's test showed.","It is also the one place in this whole group where drilling a single narrow thing beats mixed practice, because the rest of your Part 5 is already working. Step 3 is why: with grammar words the wrong options are wrong for a reason you can actually state out loud, unlike vocabulary where you either know the word or you do not. Say the reason and the rule sticks.","One honest caveat: this is 13 questions on one test. It is enough to act on for a week — it is not enough to rebuild your whole study plan around, so we will check it against your next test before going further."],"target":"23% climbing towards 45%, and a list of at least six prepositions you now know cold."},{"title":"Double passages, twice each","short":"Double passages","tag":"Reading","dose":"2 sets","time":"~40 min total","days":["Tue","Sat"],"intro":"One set untimed early in the week, a different set under the clock later. The order matters — do not swap it.","steps":["<b>Take a double-passage set. No timer.</b> Take as long as you want on this first one.","<b>Before answering, label each of the five questions:</b> text 1, text 2, or both. Just the label, before you go hunting.","<b>Answer, then check</b> — and note whether the ones you missed were the &ldquo;both&rdquo; questions or not. That answer is the whole experiment.","<b>Later in the week, do a second set with a 12-minute timer</b> and compare."],"why":["You scored 68% on single passages and 30% on doubles. There are two quite different explanations and we cannot yet tell them apart: either cross-referencing two documents is genuinely hard for you, or you simply arrived at question 181 with almost no time left, having run six minutes over. Doing one untimed settles it in forty minutes.","The labelling step teaches the mechanic itself. Usually only about one question in a five-question set truly needs both documents — the other four are answerable from one text. Students who know that stop re-reading everything twice.","We have not covered Part 7 in class yet, so treat this as learning something new rather than repairing something broken. A low score on an untaught part is information, not a verdict."],"target":"A clear answer to which of the two causes it is — that is worth more this week than the score itself."},{"title":"Gist first, options covered","short":"Gist listening","tag":"Listening","dose":"5 sets across the week","time":"~10 min each","days":["Mon","Tue","Wed","Thu","Fri"],"intro":"A short one, aimed at the single oddest thing in your results.","audio":["p3-03","p3-06","p3-09","p4-04","p4-08"],"audioTitle":"Five sets — three conversations, two talks","audioNote":"Weighted towards conversations on purpose: your first-question score was 4 out of 10 on Part 3 against 6 out of 10 on Part 4, so that is where the frame is going missing. One a day.","steps":["<b>Cover the questions and the options completely.</b> Paper over the page, or scroll them off screen. Play the recording once.","<b>Say out loud, or write in one sentence:</b> who is talking, where they are, and why they are talking.","<b>Only now uncover the questions</b> and answer them normally.","<b>Check your summary too</b>, not just your answers. Was the situation what you thought it was?"],"why":["You score 80% on the last question of each set and 50% on the first. Almost every student is the other way round, which makes this genuinely your own pattern: you are catching the details but not the situation they sit in.","That matters more than it sounds, because the first question in a Part 3 or Part 4 set is nearly always topic, purpose, or who is speaking. Across the whole listening section that is around twenty marks sitting in one question type you are getting half right.","Covering the options is the part that does the work. With the options visible it is too easy to match a word you heard; with them hidden you have to actually build the picture."],"target":"Your first-question accuracy up from 50% towards 70%, and a summary that matches the recording four times out of five.","clips":[{"id":"p3-03","label":"Conversation 3","q":"47-49","start":168.8,"end":207,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p3.mp3"},{"id":"p3-06","label":"Conversation 6","q":"56-58","start":404.05,"end":440.3,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p3.mp3"},{"id":"p3-09","label":"Conversation 9","q":"65-67","start":628.15,"end":671.45,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p3.mp3"},{"id":"p4-04","label":"Talk 4","q":"80-82","start":280.2,"end":315.55,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p4.mp3"},{"id":"p4-08","label":"Talk 8","q":"92-94","start":616.85,"end":651.95,"src":"https://grammarmetric.github.io/toeic-pt1/audio/p4.mp3"}]}],"bringLede":"Bring these three. The second one especially — it answers a question I cannot answer without you.","bring":["Your running list of prepositions from the grammar-word sets","The labelled double-passage set, and whether doing it untimed actually helped","Two of your gist summaries — one that was right and one that was wrong"]};
 
 /* Assignment accents, in order. Page chrome stays orange, so these three are
    the only other hues on the page and each one owns exactly one assignment. */
@@ -292,6 +339,117 @@ const ACCENTS = ["yellow", "cyan", "magenta"];
 const accentOf = (a, i) => a.accent || ACCENTS[i % ACCENTS.length];
 
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const mmss = s => Math.floor(s/60) + ":" + String(Math.round(s%60)).padStart(2,"0");
+
+/* ---------- audio ----------
+   Clips are ranges inside the full Part 3 / Part 4 recordings, which are
+   served from the already-public PT1 deployment rather than copied in here.
+   Every clip starts on the spoken announcement ("Questions 44 through 46
+   refer to the following conversation"), so a student always hears which one
+   they are on. Times come from _build/audio-pt1.json. */
+function audioBlock(a){
+  if (!a.clips || !a.clips.length) return "";
+  return '<div class="audio">' +
+    '<div class="audio-top"><span class="audio-ttl">' +
+      esc(a.audioTitle || "The recordings for this task") + "</span>" +
+      '<button class="rate" aria-pressed="false" title="Slow the audio to three-quarter speed">0.75&times;</button>' +
+    "</div><ul class=\"segs\">" +
+    a.clips.map(c =>
+      '<li><button class="seg" aria-pressed="false" data-src="' + esc(c.src) + '"' +
+        ' data-start="' + c.start + '" data-end="' + c.end + '">' +
+        '<span class="pl">&#9654;</span>' +
+        '<span class="nm">' + esc(c.label) +
+          '<span class="q">Q' + esc(c.q) + "</span></span>" +
+        '<span class="du">' + mmss(c.end - c.start) + "</span>" +
+        '<span class="bar"><i></i></span>' +
+      "</button></li>").join("") +
+    "</ul>" +
+    (a.audioNote ? '<p class="audio-note">' + a.audioNote + "</p>" : "") +
+  "</div>";
+}
+
+/* One <audio> per source file, reused across every clip that points at it, so
+   switching clips inside one part never re-downloads 13 minutes of mp3. */
+const players = new Map();
+function playerFor(src){
+  if (!players.has(src)) {
+    const el = new Audio();
+    el.preload = "metadata";
+    el.src = src;
+    players.set(src, el);
+  }
+  return players.get(src);
+}
+
+/* Deliberately NOT persisted. Several tasks open with a normal-speed
+   exam-conditions listen, and a 0.75x left over from yesterday would silently
+   undo that without the student noticing. Slow is a choice you make each time.
+   All three pages also share one origin on grammarmetric.github.io, so a
+   stored value would follow a student across every page there. */
+let rate = 1;
+
+let active = null;          // the <button> currently playing
+function stopActive(){
+  if (!active) return;
+  const el = playerFor(active.dataset.src);
+  el.pause();
+  active.setAttribute("aria-pressed", "false");
+  active.classList.remove("busy");
+  active.querySelector(".pl").innerHTML = "&#9654;";
+  active.querySelector(".bar i").style.width = "0";
+  active = null;
+}
+
+function playSeg(btn){
+  const src = btn.dataset.src;
+  const start = parseFloat(btn.dataset.start), end = parseFloat(btn.dataset.end);
+  const el = playerFor(src);
+  stopActive();
+  active = btn;
+  btn.setAttribute("aria-pressed", "true");
+  btn.classList.add("busy");
+  btn.querySelector(".pl").innerHTML = "&#9646;&#9646;";
+  el.playbackRate = rate;
+
+  const begin = () => {
+    /* Seeking before metadata exists is silently ignored, which used to look
+       like "the button does nothing on first tap". */
+    el.currentTime = start;
+    el.play().then(() => btn.classList.remove("busy"))
+             .catch(() => { stopActive(); });
+  };
+  if (el.readyState >= 1) begin();
+  else el.addEventListener("loadedmetadata", begin, { once: true });
+
+  const tick = () => {
+    if (active !== btn) return;
+    if (el.currentTime >= end) { stopActive(); return; }
+    const pctDone = Math.max(0, Math.min(1, (el.currentTime - start) / (end - start)));
+    btn.querySelector(".bar i").style.width = (pctDone * 100) + "%";
+  };
+  el.removeEventListener("timeupdate", el._tick || (() => {}));
+  el._tick = tick;
+  el.addEventListener("timeupdate", tick);
+}
+
+function wireAudio(root){
+  root.querySelectorAll(".seg").forEach(btn => btn.addEventListener("click", () => {
+    if (active === btn) stopActive(); else playSeg(btn);
+  }));
+  root.querySelectorAll(".rate").forEach(btn => {
+    const sync = () => {
+      const slow = rate !== 1;
+      btn.setAttribute("aria-pressed", slow ? "true" : "false");
+      root.querySelectorAll(".rate").forEach(o => o.setAttribute("aria-pressed", slow ? "true" : "false"));
+    };
+    btn.addEventListener("click", () => {
+      rate = rate === 1 ? 0.75 : 1;
+      players.forEach(el => el.playbackRate = rate);
+      sync();
+    });
+    sync();
+  });
+}
 
 /* ---------- masthead ---------- */
 document.title = "TOEIC homework — " + HW.nick;
@@ -333,13 +491,14 @@ document.getElementById("assignments").innerHTML = HW.assignments.map((a,i) =>
       '<span class="chip">' + esc(a.dose) + "</span>" +
       '<span class="chip">' + esc(a.time) + "</span>" +
     "</div>" +
-    '<div class="asg-body"><p>' + a.intro + "</p>" +
+    '<div class="asg-body"><p>' + a.intro + "</p>" + audioBlock(a) +
     "<ol class=\"steps\">" + a.steps.map(s => "<li>" + s + "</li>").join("") + "</ol>" +
     '<div class="finding"><div class="ft">Why this one</div><p>' +
       a.why.join("</p><p>") + "</p></div>" +
     '<p class="target"><b>What good looks like by Friday:</b> ' + a.target + "</p>" +
     "</div>" +
   "</article>").join("");
+wireAudio(document.getElementById("assignments"));
 
 /* ---------- tracker ----------
    Ticks live in this browser only, like the lesson pages. A different phone or
